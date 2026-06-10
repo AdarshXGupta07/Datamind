@@ -12,11 +12,13 @@ ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 60))
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def hash_password(password: str) -> str:
-    prehashed = hashlib.sha256(password.encode()).hexdigest()
+    # Truncate to 72 bytes for bcrypt compatibility
+    prehashed = hashlib.sha256(password.encode()).hexdigest()[:72]
     return pwd_context.hash(prehashed)
 
 def verify_password(plain: str, hashed: str) -> bool:
-    prehashed = hashlib.sha256(plain.encode()).hexdigest()
+    # Truncate to 72 bytes for bcrypt compatibility
+    prehashed = hashlib.sha256(plain.encode()).hexdigest()[:72]
     return pwd_context.verify(prehashed, hashed)
 
 def create_access_token(data: dict) -> str:
