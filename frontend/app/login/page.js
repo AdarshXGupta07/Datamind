@@ -3,6 +3,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { API_URL } from "../../config";
 import { LogoFull } from "../../components/Logo";
 import { ArrowRight, Mail, Lock, Eye, EyeOff, AlertCircle } from "lucide-react";
 
@@ -19,7 +20,7 @@ export default function Login() {
     setLoading(true);
     setError("");
     try {
-      const res = await axios.post("http://localhost:8000/auth/login", form);
+      const res = await axios.post(`${API_URL}/auth/login`, form);
       localStorage.setItem("token", res.data.access_token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
       router.push("/dashboard");

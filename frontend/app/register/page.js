@@ -3,6 +3,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { API_URL } from "../../config";
 import { LogoFull } from "../../components/Logo";
 import { ArrowRight, Mail, Lock, User, Eye, EyeOff, AlertCircle, CheckCircle2 } from "lucide-react";
 
@@ -59,7 +60,7 @@ export default function Register() {
     setLoading(true);
     setError("");
     try {
-      const res = await axios.post("http://localhost:8000/auth/register", {
+      const res = await axios.post(`${API_URL}/auth/register`, {
         ...form,
         role: "admin",
       });

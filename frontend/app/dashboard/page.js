@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { API_URL } from "../../config";
 import {
   BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
@@ -451,7 +452,7 @@ function DashboardInner() {
 
   const fetchConnections = async (t) => {
     try {
-      const res = await axios.get("http://localhost:8000/connections/", {
+      const res = await axios.get(`${API_URL}/connections/`, {
         headers: { Authorization: `Bearer ${t}` },
       });
       setConnections(res.data);
@@ -473,7 +474,7 @@ function DashboardInner() {
   const handleTestConnection = async (conn) => {
     setTestStates(p => ({ ...p, [conn.id]: "testing" }));
     try {
-      await axios.post(`http://localhost:8000/connections/${conn.id}/test`, {}, {
+      await axios.post(`${API_URL}/connections/${conn.id}/test`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setTestStates(p => ({ ...p, [conn.id]: "ok" }));
@@ -494,7 +495,7 @@ function DashboardInner() {
     const { conn } = deleteModal;
     setDeleteModal(p => ({ ...p, deleting: true }));
     try {
-      await axios.delete(`http://localhost:8000/connections/${conn.id}`, {
+      await axios.delete(`${API_URL}/connections/${conn.id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setConnections(p => p.filter(c => c.id !== conn.id));
@@ -523,7 +524,7 @@ function DashboardInner() {
     setQuestion("");
     try {
       const res = await axios.post(
-        "http://localhost:8000/query/",
+        `${API_URL}/query/`,
         { connection_id: selectedConn, question: q },
         { headers: { Authorization: `Bearer ${token}` } }
       );

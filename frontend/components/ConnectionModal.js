@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Database, CheckCircle2, XCircle, Loader2, Plug, Edit3 } from "lucide-react";
 import axios from "axios";
+import { API_URL } from "../config";
 
 const INITIAL_FORM = {
   name: "",
@@ -72,7 +73,7 @@ export default function ConnectionModal({ open, onClose, onSaved, token, existin
         username: form.username,
         password: form.password,
       };
-      await axios.post("http://localhost:8000/connections/test", payload, {
+      await axios.post(`${API_URL}/connections/test`, payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setTestState("ok");
@@ -91,11 +92,11 @@ export default function ConnectionModal({ open, onClose, onSaved, token, existin
       if (isEdit) {
         const payload = { ...form, port: Number(form.port) };
         if (!payload.password) delete payload.password;
-        await axios.put(`http://localhost:8000/connections/${existingConn.id}`, payload, {
+        await axios.put(`${API_URL}/connections/${existingConn.id}`, payload, {
           headers: { Authorization: `Bearer ${token}` },
         });
       } else {
-        await axios.post("http://localhost:8000/connections/", { ...form, port: Number(form.port) }, {
+        await axios.post(`${API_URL}/connections/`, { ...form, port: Number(form.port) }, {
           headers: { Authorization: `Bearer ${token}` },
         });
       }
