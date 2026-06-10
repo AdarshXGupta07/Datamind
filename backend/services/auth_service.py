@@ -2,6 +2,7 @@
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
+import hashlib
 import os
 
 load_dotenv()
@@ -11,10 +12,12 @@ ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 60))
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    prehashed = hashlib.sha256(password.encode()).hexdigest()
+    return pwd_context.hash(prehashed)
 
 def verify_password(plain: str, hashed: str) -> bool:
-    return pwd_context.verify(plain, hashed)
+    prehashed = hashlib.sha256(plain.encode()).hexdigest()
+    return pwd_context.verify(prehashed, hashed)
 
 def create_access_token(data: dict) -> str:
     payload = data.copy()
