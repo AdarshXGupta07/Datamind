@@ -14,14 +14,18 @@ async def startup_event():
     Base.metadata.create_all(bind=engine)
 
 # Get allowed origins from environment variable or use defaults
-ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+allowed_origins_str = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,https://datasqlmindb.netlify.app")
+ALLOWED_ORIGINS = [origin.strip() for origin in allowed_origins_str.split(",")]
 
+# Add CORS middleware with explicit configuration
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
+    expose_headers=["*"],
+    max_age=3600,
 )
 
 app.include_router(auth.router)
